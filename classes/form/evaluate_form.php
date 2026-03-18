@@ -69,34 +69,6 @@ class evaluate_form extends \moodleform {
             $bloomlevels
         );
 
-        $educationlevels = [
-            'early childhood education' =>
-                get_string('earlyeducation', 'qbank_llmjudge'),
-            'primary education' =>
-                get_string('primaryeducation', 'qbank_llmjudge'),
-            'lower secondary education' =>
-                get_string('lowersecondaryeducation', 'qbank_llmjudge'),
-            'upper secondary education' =>
-                get_string('uppersecondaryeducation', 'qbank_llmjudge'),
-            'post-secondary non-tertiary education' =>
-                get_string('postsecondaryeducation', 'qbank_llmjudge'),
-            'short-cycle tertiary education' =>
-                get_string('tertiaryeducation', 'qbank_llmjudge'),
-            'bachelor or equivalent' =>
-                get_string('bachelor', 'qbank_llmjudge'),
-            'master or equivalent' =>
-                get_string('master', 'qbank_llmjudge'),
-            'doctoral or equivalent' =>
-                get_string('doctoral', 'qbank_llmjudge'),
-        ];
-
-        $mform->addElement(
-            'select',
-            'education_levels',
-            get_string('educationlevel', 'qbank_llmjudge'),
-            $educationlevels
-        );
-
         $mform->addElement('hidden', 'courseid');
         $mform->setDefault('courseid', $courseid);
         $mform->setType('courseid', PARAM_INT);

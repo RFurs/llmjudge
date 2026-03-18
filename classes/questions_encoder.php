@@ -40,8 +40,6 @@ class questions_encoder {
         if (empty($questionids)) {
             return json_encode([]);
         }
-
-
         if (!is_array($questionids)) {
             $questionids = explode(',', $questionids ?? '');
         }
