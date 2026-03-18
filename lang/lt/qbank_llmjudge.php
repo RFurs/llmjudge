@@ -31,6 +31,7 @@ $string['create'] = 'Kurti';
 $string['evaluate'] = 'Įvertinti';
 $string['evaluatequestions'] = 'Įvertinti klausimus naudojant DI';
 $string['evaluationcompleted'] = 'Klausimai buvo įvertinti sėkmingai.';
+$string['missingquestionsselected'] = 'Nėra pasirinktų klausimų.';
 $string['pluginname'] = 'DKM teisėjas';
 $string['remember'] = 'Atsiminti';
 $string['understand'] = 'Suprasti';

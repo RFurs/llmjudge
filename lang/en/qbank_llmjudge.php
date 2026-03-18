@@ -31,6 +31,7 @@ $string['create'] = 'Create';
 $string['evaluate'] = 'Evaluate';
 $string['evaluatequestions'] = 'Evaluate the questions with AI';
 $string['evaluationcompleted'] = 'Evaluation was completed successfully.';
+$string['missingquestionsselected'] = 'Missing selected questions';
 $string['pluginname'] = 'LLM Judge';
 $string['remember'] = 'Remember';
 $string['understand'] = 'Understand';

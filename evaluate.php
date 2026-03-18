@@ -25,7 +25,7 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../../editlib.php');
 
-global $DB, $OUTPUT, $PAGE, $COURSE;
+global $CFG, $DB, $OUTPUT, $PAGE, $COURSE;
 
 $cmid = optional_param('cmid', 0, PARAM_INT);
 $returnurlparam = optional_param('returnurl', 0, PARAM_LOCALURL);
@@ -34,7 +34,11 @@ $courseid = optional_param('courseid', 0, PARAM_INT);
 if ($returnurlparam) {
     $returnurl = new \moodle_url($returnurlparam);
 } else {
-    $returnurl = new \moodle_url('/question/edit.php', ['courseid' => $courseid]);
+    if ((int)$CFG->branch >= 500) {
+        $returnurl = new \moodle_url('/question/edit.php', ['cmid' => $cmid]);
+    } else {
+        $returnurl = new \moodle_url('/question/edit.php', ['courseid' => $courseid]);
+    }
 }
 
 $rawquestions = $_REQUEST;
@@ -43,6 +47,9 @@ $rawquestions = $_REQUEST;
 if (!$questionlist) {
     $questionlist = optional_param('movequestionsselected', null, PARAM_RAW);
     $questionids = explode(',', $questionlist ?? '');
+    if (!$questionlist || !$questionids) {
+        throw new \moodle_exception('missingquestionsselected', 'qbank_llmjudge');
+    }
 }
 
 if ($cmid) {
@@ -68,6 +75,8 @@ $PAGE->set_heading($course->fullname);
 
 $mform = new \qbank_llmjudge\form\evaluate_form(null, [
     'courseid' => $courseid,
+    'cmid' => $cmid,
+    'returnurl' => $returnurl,
     'questionlist' => $questionlist,
 ]);
 
@@ -78,7 +87,6 @@ if ($mform->is_cancelled()) {
 if ($data = $mform->get_data()) {
     try {
         $encoder = new \qbank_llmjudge\questions_encoder();
-
         $jsonquestions = $encoder->encode_questions_to_json($questionlist, $context);
         // Judge logic!
         \core\notification::success(get_string('evaluationcompleted', 'qbank_llmjudge'));

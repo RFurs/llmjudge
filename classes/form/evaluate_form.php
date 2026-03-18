@@ -39,6 +39,8 @@ class evaluate_form extends \moodleform {
         global $CFG, $PAGE;
         $mform = $this->_form;
         $courseid = $this->_customdata['courseid'];
+        $cmid = $this->_customdata['cmid'];
+        $returnurl = $this->_customdata['returnurl'];
         $questionlist = $this->_customdata['questionlist'] ?? '';
 
         $mform->addElement(
@@ -72,6 +74,14 @@ class evaluate_form extends \moodleform {
         $mform->addElement('hidden', 'courseid');
         $mform->setDefault('courseid', $courseid);
         $mform->setType('courseid', PARAM_INT);
+
+        $mform->addElement('hidden', 'cmid');
+        $mform->setType('cmid', PARAM_INT);
+        $mform->setDefault('cmid', $cmid);
+
+        $mform->addElement('hidden', 'returnurl');
+        $mform->setType('returnurl', PARAM_LOCALURL);
+        $mform->setDefault('returnurl', $returnurl);
 
         $mform->addElement('hidden', 'movequestionsselected');
         $mform->setType('movequestionsselected', PARAM_RAW);
