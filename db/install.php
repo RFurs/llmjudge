@@ -22,7 +22,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Post-install custom actions for the qbank_llmjudge plugin.
+ *
+ * This function is called by the Moodle core after the plugin database tables
+ * have been created during the initial installation.
+ *
+ * @return void
+ */
 function xmldb_qbank_llmjudge_install() {
 }

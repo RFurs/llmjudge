@@ -24,5 +24,23 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['analyze'] = 'Analizuoti';
+$string['apply'] = 'Taikyti';
+$string['bachelor'] = 'Bakalauro studijų lygis ar ekvivalentus';
+$string['cognitivedifficulty'] = 'Numatytas kognityvinis lygis';
+$string['create'] = 'Kurti';
+$string['doctoral'] = 'Mokslų daktaro studijų lygis ar ekvivalentus';
+$string['earlyeducation'] = 'Ikimokyklinio ugdymo lygis';
+$string['educationlevel'] = 'Numatytas edukacinis lygis';
+$string['evaluate'] = 'Įvertinti';
 $string['evaluatequestions'] = 'Įvertinti klausimus naudojant DI';
-$string['pluginname'] = 'LLM Judge';
+$string['evaluationcompleted'] = 'Klausimai buvo įvertinti sėkmingai.';
+$string['lowersecondaryeducation'] = 'Pagrindinio ugdymo lygis';
+$string['master'] = 'Magistro studijų lygis ar ekvivalentus';
+$string['pluginname'] = 'DKM teisėjas';
+$string['postsecondaryeducation'] = 'Povidurinis aukštojo išsilavinimo nesuteikiantis ugdymas';
+$string['primaryeducation'] = 'Pradinio ugdymo lygis';
+$string['remember'] = 'Atsiminti';
+$string['tertiaryeducation'] = 'Trumpojo ciklo studijų lygis';
+$string['understand'] = 'Suprasti';
+$string['uppersecondaryeducation'] = 'Vidurinio ugdymo lygis';

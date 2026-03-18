@@ -22,4 +22,71 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define('MOODLE_INTERNAL' || die);
+require_once(__DIR__ . '/../../../config.php');
+require_once(__DIR__ . '/../../editlib.php');
+
+global $DB, $OUTPUT, $PAGE, $COURSE;
+
+$cmid = optional_param('cmid', 0, PARAM_INT);
+$returnurlparam = optional_param('returnurl', 0, PARAM_LOCALURL);
+$courseid = optional_param('courseid', 0, PARAM_INT);
+
+if ($returnurlparam) {
+    $returnurl = new \moodle_url($returnurlparam);
+} else {
+    $returnurl = new \moodle_url('/question/edit.php', ['courseid' => $courseid]);
+}
+
+$rawquestions = $_REQUEST;
+[$questionids, $questionlist] = \qbank_bulkmove\helper::process_question_ids($rawquestions);
+
+if (!$questionlist) {
+    $questionlist = optional_param('movequestionsselected', null, PARAM_RAW);
+    $questionids = explode(',', $questionlist ?? '');
+}
+
+if ($cmid) {
+    [$module, $cm] = get_module_from_cmid($cmid);
+    require_login($cm->course, false, $cm);
+    $context = context_module::instance($cmid);
+    $course = get_course($cm->course);
+} else if ($courseid) {
+    $course = get_course($courseid);
+    require_login($courseid, false);
+    $context = context_course::instance($courseid);
+} else {
+    throw new moodle_exception('missingcourseorcmid', 'question');
+}
+
+require_capability('qbank/llmjudge:evaluate', $context);
+
+$PAGE->set_url(new moodle_url('/question/bank/llmjudge/evaluate.php', ['courseid' => $courseid]));
+$PAGE->set_context($context);
+$PAGE->set_pagelayout('standard');
+$PAGE->set_title(get_string('pluginname', 'qbank_llmjudge'));
+$PAGE->set_heading($course->fullname);
+
+$mform = new \qbank_llmjudge\form\evaluate_form(null, [
+    'courseid' => $courseid,
+    'questionlist' => $questionlist,
+]);
+
+if ($mform->is_cancelled()) {
+    redirect($returnurl);
+}
+
+if ($data = $mform->get_data()) {
+    try {
+        $encoder = new \qbank_llmjudge\questions_encoder();
+
+        $jsonquestions = $encoder->encode_questions_to_json($questionlist, $context);
+        // Judge logic!
+        \core\notification::success(get_string('evaluationcompleted', 'qbank_llmjudge'));
+        redirect($returnurl);
+    } catch (\Exception $e) {
+        \core\notification::error($e->getMessage());
+    }
+}
+echo $OUTPUT->header();
+$mform->display();
+echo $OUTPUT->footer();
