@@ -65,7 +65,7 @@ class questions_encoder {
                 }
             }
             $selectedquestionsdata[] = [
-                'moodle_id' => (int)$q->id,
+                'question_id' => (int)$q->id,
                 'type' => $q->qtype,
                 'name' => $q->name,
                 'question_text' => html_to_text(format_text($q->questiontext, $q->questiontextformat, ['context' => $context->id])),

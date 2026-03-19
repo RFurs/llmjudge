@@ -87,8 +87,15 @@ if ($mform->is_cancelled()) {
 if ($data = $mform->get_data()) {
     try {
         $encoder = new \qbank_llmjudge\questions_encoder();
+        $promptbuilder = new \qbank_llmjudge\prompt_builder();
+        $llmevaluator = new \qbank_llmjudge\llm_evaluator();
+
         $jsonquestions = $encoder->encode_questions_to_json($questionlist, $context);
-        // Judge logic!
+        $prompt = $promptbuilder->build($data, $jsonquestions);
+        $evaluation = $llmevaluator->evaluate($prompt, $context->id);
+        file_put_contents(__DIR__ . "/questions_dump.txt", $jsonquestions);
+        file_put_contents(__DIR__ . "/llm_output_dump.txt", $evaluation);
+
         \core\notification::success(get_string('evaluationcompleted', 'qbank_llmjudge'));
         redirect($returnurl);
     } catch (\Exception $e) {
