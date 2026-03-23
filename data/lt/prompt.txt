@@ -29,7 +29,7 @@ Teisingumas (Correctness):
 Užduoties formuluotėje nėra klaidų, trūkstamų ar prieštaringų duomenų. Sprendimas atitinka visus reikalavimus ir neturi klaidų.
 
 Kognityvinis lygis (Cognitive_level):
-Klausimas atitinka numatytą Bloomo taksonomijos lygį.
+Klausimas atitinka numatytą Blumo taksonomijos lygį.
 
 Diskriminacija (Discrimination) (TIK pasirenkamojo atsakymo klausimams):
 Neteisingi atsakymai yra įtikinami ir leidžia atskirti pasirengusius studentus nuo nepasirengusių.

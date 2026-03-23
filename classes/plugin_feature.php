@@ -37,4 +37,10 @@ class plugin_feature extends plugin_features_base {
             new evaluate_questions($qbank),
         ];
     }
+
+    public function get_question_columns(?view $qbank = null): array {
+        return [
+            new score_column($qbank),
+        ];
+    }
 }
