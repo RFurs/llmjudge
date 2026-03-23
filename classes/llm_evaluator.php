@@ -52,7 +52,19 @@ class llm_evaluator {
             throw new \moodle_exception('aigenerationerror', 'qbank_llmjudge', '', $response->get_errormessage());
         }
 
-        return $this->cleanup_response($response->get_response_data()['generatedcontent'] ?? '');
+        $modelused = $this->get_model_used($action);
+
+        $llmoutput = $this->cleanup_response($response->get_response_data()['generatedcontent'] ?? '');
+        $llmoutput = json_decode($llmoutput, true);
+
+        if ($llmoutput === null || !isset($llmoutput['evaluations'])) {
+            throw new \moodle_exception('invalidjson', 'qbank_llmjudge');
+        }
+
+        return [
+         'llmoutput' => $llmoutput,
+         'model' => $modelused,
+        ];
     }
 
     /**
@@ -73,5 +85,37 @@ class llm_evaluator {
             $content = substr($content, $start, $end - $start + 1);
         }
         return trim($content);
+    }
+
+    /**
+     * Get the actual model used for the last AI action.
+     *
+     * @param \core_ai\aiactions\base $action
+     * @return string|null
+     */
+    private function get_model_used(\core_ai\aiactions\base $action): ?string {
+        global $DB;
+
+        $params = [
+            'actionname' => $action->get_basename(),
+            'userid' => $action->get_configuration('userid'),
+            'contextid' => $action->get_configuration('contextid'),
+            'timecreated' => $action->get_configuration('timecreated'),
+        ];
+
+        $sql = "SELECT provider
+                FROM {ai_action_register}
+                WHERE actionname = :actionname
+                AND userid = :userid
+                AND contextid = :contextid
+                AND timecreated = :timecreated
+                AND success = 1
+            ORDER BY id DESC";
+
+        $record = $DB->get_record_sql($sql, $params, IGNORE_MULTIPLE);
+
+        $model = get_config($record->provider, 'action_generate_text_model');
+
+        return $model;
     }
 }

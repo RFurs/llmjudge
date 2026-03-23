@@ -24,6 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['aigenerationerror'] = 'Nepavyko sugeneruoti įvertinimo. Prašome pabandyti dar kartą.';
 $string['analyze'] = 'Analizuoti';
 $string['apply'] = 'Taikyti';
 $string['cognitivedifficulty'] = 'Numatytas kognityvinis lygis';
@@ -31,7 +32,9 @@ $string['create'] = 'Kurti';
 $string['evaluate'] = 'Įvertinti';
 $string['evaluatequestions'] = 'Įvertinti klausimus naudojant DI';
 $string['evaluationcompleted'] = 'Klausimai buvo įvertinti sėkmingai.';
+$string['invalidjson'] = 'DI sugeneruotas JSON yra nekorektiškas. Prašome pabandyti dar kartą.';
 $string['missingquestionsselected'] = 'Nėra pasirinktų klausimų.';
 $string['pluginname'] = 'DKM teisėjas';
+$string['questionscountexceeded'] = 'Maksimalus klausimų skaičius yra 10.';
 $string['remember'] = 'Atsiminti';
 $string['understand'] = 'Suprasti';

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="question/bank/llmjudge/db" VERSION="2026032000" COMMENT="XMLDB file for Moodle qbank_llmjudge"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+
+    <TABLES>
+        <TABLE NAME="qbank_llmjudge_eval" COMMENT="Stores LLM evaluation results for questions">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="contextid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="overallscore" TYPE="number" LENGTH="3" DECIMALS="2" NOTNULL="false"/>
+                <FIELD NAME="model" TYPE="char" LENGTH="100" NOTNULL="true"/>
+                <FIELD NAME="rawjson" TYPE="text" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="questionid_fk" TYPE="foreign" FIELDS="questionid"
+                     REFTABLE="question" REFFIELDS="id"/>
+                <KEY NAME="contextid_fk" TYPE="foreign" FIELDS="contextid"
+                     REFTABLE="context" REFFIELDS="id"/>
+                <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid"
+                     REFTABLE="user" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="timecreated_idx" UNIQUE="false" FIELDS="timecreated"/>
+            </INDEXES>
+        </TABLE>
+    </TABLES>
+</XMLDB>

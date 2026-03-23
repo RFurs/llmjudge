@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qbank_llmjudge';
-$plugin->version = 2026031700;
+$plugin->version = 2026032000;
 $plugin->requires = 2024100100; // Moodle 4.5+ is required.
 $plugin->maturity = MATURITY_ALPHA;
 $plugin->release = 'v0.0.0';
