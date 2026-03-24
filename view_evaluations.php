@@ -141,5 +141,10 @@ if (!$evaluations) {
     echo html_writer::table($table);
 }
 
-echo $OUTPUT->continue_button($returnurl);
+if (!empty($returnurl)) {
+    echo $OUTPUT->continue_button(new moodle_url($returnurl));
+} else {
+    $fallback = new moodle_url('/question/edit.php', ['courseid' => $courseid]);
+    echo $OUTPUT->continue_button($fallback);
+}
 echo $OUTPUT->footer();
