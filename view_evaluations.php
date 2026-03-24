@@ -26,6 +26,7 @@ require_once(__DIR__ . '/../../../config.php');
 
 $questionid = required_param('questionid', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
+$returnurl = optional_param('returnurl', '', PARAM_LOCALURL);
 
 $course = get_course($courseid);
 require_login($course);
@@ -35,6 +36,7 @@ require_capability('qbank/llmjudge:evaluate', $context);
 $PAGE->set_url(new moodle_url('/question/bank/llmjudge/view_evaluations.php', [
     'questionid' => $questionid,
     'courseid' => $courseid,
+    'returnurl' => $returnurl,
 ]));
 $PAGE->set_title(get_string('evaluations', 'qbank_llmjudge'));
 $PAGE->set_heading(get_string('evaluations', 'qbank_llmjudge'));
@@ -139,5 +141,5 @@ if (!$evaluations) {
     echo html_writer::table($table);
 }
 
-echo $OUTPUT->continue_button(new moodle_url('/question/edit.php', ['courseid' => $courseid]));
+echo $OUTPUT->continue_button($returnurl);
 echo $OUTPUT->footer();

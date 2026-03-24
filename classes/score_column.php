@@ -29,14 +29,35 @@ use core_question\local\bank\column_base;
  * Class responsible for extending qbank columns
  */
 class score_column extends column_base {
+    /**
+     * Returns the internal name of the column.
+     *
+     * @return string Column identifier
+     */
     public function get_name(): string {
         return 'llm_score';
     }
-
+    /**
+     * Returns the column header title.
+     *
+     * @return string Localised column title
+     */
     public function get_title(): string {
         return get_string('llmscore', 'qbank_llmjudge');
     }
 
+    /**
+     * Outputs the column content for a given question row.
+     *
+     * Displays the most recent evaluation score as a badge.
+     * If a score exists, it is rendered as a clickable link
+     * leading to the detailed evaluation page. If no evaluation
+     * is found, a placeholder is shown instead.
+     *
+     * @param \stdClass $question Question record object
+     * @param string $rowclasses CSS classes for the current row
+     * @return void
+     */
     protected function display_content($question, $rowclasses): void {
         global $DB, $OUTPUT, $PAGE;
 
@@ -44,7 +65,7 @@ class score_column extends column_base {
             "SELECT overallscore
             FROM {qbank_llmjudge_eval}
             WHERE questionid = :questionid
-            ORDER BY timecreated DESC",
+            ORDER BY overallscore DESC",
             ['questionid' => $question->id],
             IGNORE_MULTIPLE,
         );
@@ -59,6 +80,7 @@ class score_column extends column_base {
         $url = new \moodle_url('/question/bank/llmjudge/view_evaluations.php', [
             'questionid' => $question->id,
             'courseid' => $courseid,
+            'returnurl' => $PAGE->url->out(false),
         ]);
 
         $scoretext = number_format($record->overallscore, 2);

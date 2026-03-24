@@ -30,6 +30,7 @@ global $CFG, $DB, $OUTPUT, $PAGE, $COURSE;
 $cmid = optional_param('cmid', 0, PARAM_INT);
 $returnurlparam = optional_param('returnurl', 0, PARAM_LOCALURL);
 $courseid = optional_param('courseid', 0, PARAM_INT);
+$questionlist = optional_param('movequestionsselected', null, PARAM_RAW);
 
 if ($returnurlparam) {
     $returnurl = new \moodle_url($returnurlparam);
@@ -41,16 +42,17 @@ if ($returnurlparam) {
     }
 }
 
-$rawquestions = $_REQUEST;
-[$questionids, $questionlist] = \qbank_bulkmove\helper::process_question_ids($rawquestions);
-
 if (!$questionlist) {
-    $questionlist = optional_param('movequestionsselected', null, PARAM_RAW);
-    $questionids = explode(',', $questionlist ?? '');
-    if (!$questionlist || !$questionids) {
-        throw new \moodle_exception('missingquestionsselected', 'qbank_llmjudge');
-    }
+    $rawquestions = $_REQUEST;
+    [$questionids, $processedlist] = \qbank_bulkmove\helper::process_question_ids($rawquestions);
+    $questionlist = $processedlist;
 }
+
+if (empty($questionlist)) {
+    throw new \moodle_exception('missingquestionsselected', 'qbank_llmjudge');
+}
+
+$questionids = explode(',', $questionlist ?? '');
 
 if ($cmid) {
     [$module, $cm] = get_module_from_cmid($cmid);
@@ -67,7 +69,15 @@ if ($cmid) {
 
 require_capability('qbank/llmjudge:evaluate', $context);
 
-$PAGE->set_url(new moodle_url('/question/bank/llmjudge/evaluate.php', ['courseid' => $courseid]));
+$PAGE->set_url(
+    new moodle_url(
+        '/question/bank/llmjudge/evaluate.php',
+        ['courseid' => $courseid,
+        'cmid' => $cmid,
+        'movequestionsselected' => $questionlist,
+        ],
+    )
+);
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('pluginname', 'qbank_llmjudge'));
@@ -88,6 +98,9 @@ if ($data = $mform->get_data()) {
     try {
         if (count($questionids) > 10) {
             throw new \moodle_exception('questionscountexceeded', 'qbank_llmjudge');
+        }
+        if (!empty($data->returnurl)) {
+            $returnurl = new \moodle_url($data->returnurl);
         }
         $encoder = new \qbank_llmjudge\questions_encoder();
         $promptbuilder = new \qbank_llmjudge\prompt_builder();
