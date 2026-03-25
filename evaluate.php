@@ -69,6 +69,8 @@ if ($cmid) {
 
 require_capability('qbank/llmjudge:evaluate', $context);
 
+$something = $PAGE->url->out_as_local_url(false);
+
 $PAGE->set_url(
     new moodle_url(
         '/question/bank/llmjudge/evaluate.php',
@@ -113,7 +115,6 @@ if ($data = $mform->get_data()) {
         $params = new \stdClass();
         $params->json = $evaluationdata['llmoutput'];
         $params->model = $evaluationdata['model'];
-        $params->contextid = $context->id;
         $params->userid = $USER->id;
 
         \qbank_llmjudge\evaluation_saver::save_evaluation($params);

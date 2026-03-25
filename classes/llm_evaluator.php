@@ -37,7 +37,7 @@ class llm_evaluator {
      * @return string JSON evaluation
      */
     public function evaluate(string $prompt, int $contextid) {
-        global $USER;
+        global $USER, $CFG;
 
         $action = new \core_ai\aiactions\generate_text(
             contextid: $contextid,
@@ -51,8 +51,11 @@ class llm_evaluator {
         if (!$response->get_success()) {
             throw new \moodle_exception('aigenerationerror', 'qbank_llmjudge', '', $response->get_errormessage());
         }
-
-        $modelused = $this->get_model_used($action);
+        if ((int)$CFG->branch >= 500) {
+            $modelused = $response->get_response_data()['model'];
+        } else {
+            $modelused = $this->get_model_used($action);
+        }
 
         $llmoutput = $this->cleanup_response($response->get_response_data()['generatedcontent'] ?? '');
         $llmoutput = json_decode($llmoutput, true);
@@ -107,7 +110,6 @@ class llm_evaluator {
                 FROM {ai_action_register}
                 WHERE actionname = :actionname
                 AND userid = :userid
-                AND contextid = :contextid
                 AND timecreated = :timecreated
                 AND success = 1
             ORDER BY id DESC";

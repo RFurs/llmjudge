@@ -40,9 +40,9 @@ class evaluation_saver {
         $timecreated = time();
         $data = $evaldata->json;
 
-        $overallscore = 0;
-        $criterioncount = 0;
         foreach ($data['evaluations'] as $eval) {
+            $overallscore = 0;
+            $criterioncount = 0;
             $questionid = (int) ($eval['question_id'] ?? 0);
 
             foreach ($eval['criteria'] as $criterion) {
@@ -55,7 +55,6 @@ class evaluation_saver {
 
             $record = (object)[
                 'questionid' => $questionid,
-                'contextid' => $evaldata->contextid,
                 'userid' => $evaldata->userid,
                 'timecreated' => $timecreated,
                 'overallscore' => $overallscore,

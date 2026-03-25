@@ -54,6 +54,7 @@ if (!$evaluations) {
         'ID',
         get_string('model', 'qbank_llmjudge'),
         get_string('time'),
+        get_string('overallscore', 'qbank_llmjudge'),
         get_string('score', 'qbank_llmjudge'),
         get_string('details', 'qbank_llmjudge'),
     ];
@@ -120,6 +121,8 @@ if (!$evaluations) {
                 'class' => 'btn btn-outline-primary btn-sm btn-block mb-1',
                 'data-toggle' => 'collapse',
                 'data-target' => '#feedback-' . $eval->id,
+                'data-bs-toggle' => 'collapse',
+                'data-bs-target' => '#feedback-' . $eval->id,
             ]
         );
 
@@ -132,7 +135,8 @@ if (!$evaluations) {
         $table->data[] = [
             $eval->id,
             "<code>" . s($eval->model) . "</code>",
-            userdate($eval->timecreated),
+            userdate($eval->timecreated, '%Y-%m-%d %H:%M'),
+            $eval->overallscore,
             $criteriastring,
             $feedbackbutton . $feedbackdiv,
         ];
