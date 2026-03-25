@@ -8,7 +8,6 @@ SVARBIOS TAISYKLĖS:
 - Naudok TIKSLIAI nurodytus JSON laukų pavadinimus.
 - Naudok TIK šiuos įvertinimus: 0, 1
 - NEPRALEISK nė vieno JSON lauko.
-- Jei kriterijus netaikomas, nustatyk "score" į null, o "applicable" į false.
 
 VERTINIMO SKALĖ:
 0 = neatitinka kriterijaus
@@ -18,21 +17,27 @@ KRITERIJŲ APIBRĖŽIMAI:
 
 Aiškumas (Clarity):
 Klausimas suformuluotas aiškiai, gramatiškai taisyklingai ir nedviprasmiškai.
+Įrašyk 0 jeigu klausimas pasižymi dviprasmiškumu, gramatinėmis klaidomis arba suformuluotas neaiškiai.
 
 Glaustumas (Conciseness):
 Klausimas yra glaustas, vengia pasikartojimų ir perteklinės informacijos.
+Įrašyk 0 jeigu perteklinė informacija arba pasikartojimai trukdo suprasti klausimo esmę.
 
 Patikimumas (Reliability):
 Klausimas turi vieną aiškiai teisingą atsakymą (ar atsakymų kombinaciją) ir užtikrina nuoseklius vertinimo rezultatus.
+Įrašyk 0 jeigu teisingi atsakymai gali skirstis arba neįmanoma atsakyti vienareikšmiškai.
 
-Teisingumas (Correctness):
+Korektiškumas (Correctness):
 Užduoties formuluotėje nėra klaidų, trūkstamų ar prieštaringų duomenų. Sprendimas atitinka visus reikalavimus ir neturi klaidų.
+Įrašyk 0 jeigu formuluotė arba teisingas atsakymas pasižymi klaidomis. Taip pat įrašyk 0 jeigu atsakymui nepakanka duomenų arba jie yra prieštaringi.
 
 Kognityvinis lygis (Cognitive_level):
 Klausimas atitinka numatytą Blumo taksonomijos lygį.
+Įrašyk 0 jeigu klausimas neatitinka numatyto Blumo taksonomijos lygio ir pasiūlymuose įrašyk kurį lygį klausimas atitinka iš tikrųjų.
 
-Diskriminacija (Discrimination) (TIK pasirenkamojo atsakymo klausimams):
+Diskriminacija (Discrimination):
 Neteisingi atsakymai yra įtikinami ir leidžia atskirti pasirengusius studentus nuo nepasirengusių.
+Įrašyk 0 jeigu klausime nėra efektyvių distraktorių, kurie apsunkintų testą ir atskirtų pasirengusius studentus nuo nepasirengusių.
 
 ---
 ĮVESTIS (INPUT):
@@ -74,10 +79,9 @@ IŠVESTIES FORMATAS (OUTPUT FORMAT):
           "intended_level": "<string>"
         },
         "discrimination": {
-          "score": <0 | 1 | null>,
+          "score": <0 | 1>,
           "feedback": "<trumpas paaiškinimas>",
-          "suggestion": "<patobulinimo pasiūlymas>",
-          "applicable": <true | false>
+          "suggestion": "<patobulinimo pasiūlymas>"
         }
       }
     }
@@ -87,9 +91,6 @@ IŠVESTIES FORMATAS (OUTPUT FORMAT):
 ---
 
 SPECIALIOS TAISYKLĖS:
-- Jei question_type NĖRA multichoice, nustatyk:
-  "discrimination": { "score": null, "applicable": false, ... }
-
 - Atsiliepimai turi būti glausti (1–3 sakiniai).
 - Pasiūlymai turi būti konkretūs ir pritaikomi.
 

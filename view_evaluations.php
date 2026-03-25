@@ -85,10 +85,6 @@ if (!$evaluations) {
                 } else if ($score === 0) {
                     $badgeclass = 'badge-danger';
                     $icon = '<i class="fa fa-times-circle" aria-hidden="true"></i>';
-                } else {
-                    $badgeclass = 'badge-secondary';
-                    $icon = '<i class="fa fa-minus-circle" aria-hidden="true"></i>';
-                    $score = '-';
                 }
 
                 $criteriastring .= html_writer::tag('span', "{$icon} {$label}: {$score}", [

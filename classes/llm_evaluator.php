@@ -52,7 +52,7 @@ class llm_evaluator {
             throw new \moodle_exception('aigenerationerror', 'qbank_llmjudge', '', $response->get_errormessage());
         }
         if ((int)$CFG->branch >= 500) {
-            $modelused = $response->get_response_data()['model'];
+            $modelused = $response->get_response_data()['model'] ?? '';
         } else {
             $modelused = $this->get_model_used($action);
         }
