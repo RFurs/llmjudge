@@ -25,7 +25,7 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../../editlib.php');
 
-global $CFG, $DB, $OUTPUT, $PAGE, $COURSE;
+global $CFG, $OUTPUT, $PAGE, $USER;
 
 $cmid = optional_param('cmid', 0, PARAM_INT);
 $returnurlparam = optional_param('returnurl', 0, PARAM_LOCALURL);
@@ -52,7 +52,7 @@ if (empty($questionlist)) {
     throw new \moodle_exception('missingquestionsselected', 'qbank_llmjudge');
 }
 
-$questionids = explode(',', $questionlist ?? '');
+$questionids = explode(',', $questionlist);
 
 if ($cmid) {
     [$module, $cm] = get_module_from_cmid($cmid);

@@ -37,7 +37,12 @@ class plugin_feature extends plugin_features_base {
             new evaluate_questions($qbank),
         ];
     }
-
+    /**
+     * Define the custom columns provided by this plugin to the question bank view.
+     *
+     * @param view|null $qbank The current question bank view instance.
+     * @return \core_question\local\bank\column_base[] An array of question bank column objects.
+     */
     public function get_question_columns(?view $qbank = null): array {
         return [
             new score_column($qbank),

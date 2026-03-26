@@ -96,7 +96,6 @@ class score_column extends column_base {
         }
 
         $courseid = $PAGE->course->id ?? 0;
-        
         $returnurl = $this->qbank->returnurl;
 
         if ($returnurl === '/') {
