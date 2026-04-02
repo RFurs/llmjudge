@@ -25,7 +25,7 @@ Write 0 if verbosity of the question makes it hard for a student to understand t
 
 Reliability:
 The question has a single clearly correct answer (or answers combination) and would yield consistent results.
-Write 0 if the question would yield inconsistent results.
+Write 0 if the question would yield inconsistent results. Note that you should not write 0 just because the questions are open. Also do not write 0 because of incorrect answer, instead write 0 while evaluating correctness. 
 
 Correctness:
 The problem statement does not contain errors, missing or inconsistend data. The solution fulfills all the requirements and contains no errors or omissions.
@@ -36,7 +36,8 @@ The question matches the intended Bloom's taxonomy level.
 Write 0 if the question does not match the intended taxonomy level
 
 Discrimination:
-Write 0 if the question has no effective distractors that are good at drawing incorrect answers from unprepared students.
+Plausible incorrect answers or well prepared task (e.g., intricate or complex code) are efficient at drawing incorrect answers from unprepared students.
+Write 0 if the question has no effective distractors that are good at drawing incorrect answers from unprepared students. Note that you should not write 0 just because the questions are open.
 
 ---
 INPUT:

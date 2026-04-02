@@ -25,7 +25,7 @@ Klausimas yra glaustas, vengia pasikartojimų ir perteklinės informacijos.
 
 Patikimumas (Reliability):
 Klausimas turi vieną aiškiai teisingą atsakymą (ar atsakymų kombinaciją) ir užtikrina nuoseklius vertinimo rezultatus.
-Įrašyk 0 jeigu teisingi atsakymai gali skirstis arba neįmanoma atsakyti vienareikšmiškai.
+Įrašyk 0 jeigu teisingi atsakymai gali skirstis arba neįmanoma atsakyti vienareikšmiškai. Negalima rašyti 0 vien tik dėl to, kad klausimas yra atvirojo tipo. Taip pat negalima rašyti 0 jeigu pateiktas neteisingas atsakymas, vietoje to reikia rašyti 0 vertinant korektiškumą.
 
 Korektiškumas (Correctness):
 Užduoties formuluotėje nėra klaidų, trūkstamų ar prieštaringų duomenų. Sprendimas atitinka visus reikalavimus ir neturi klaidų.
@@ -36,8 +36,8 @@ Klausimas atitinka numatytą Blumo taksonomijos lygį.
 Įrašyk 0 jeigu klausimas neatitinka numatyto Blumo taksonomijos lygio ir pasiūlymuose įrašyk kurį lygį klausimas atitinka iš tikrųjų.
 
 Diskriminacija (Discrimination):
-Neteisingi atsakymai yra įtikinami ir leidžia atskirti pasirengusius studentus nuo nepasirengusių.
-Įrašyk 0 jeigu klausime nėra efektyvių distraktorių, kurie apsunkintų testą ir atskirtų pasirengusius studentus nuo nepasirengusių.
+Įtikinami neteisingi atsakymai arba gerai parengta užduotis (pvz., painus ar komplikuotas kodas) leidžia atskirti pasirengusius studentus nuo nepasirengusių.
+Įrašyk 0 jeigu klausime nėra efektyvių distraktorių, kurie apsunkintų testą ir atskirtų pasirengusius studentus nuo nepasirengusių. Negalima rašyti 0 vien tik dėl to, kad klausimai yra atvirojo tipo.
 
 ---
 ĮVESTIS (INPUT):
