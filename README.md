@@ -74,7 +74,7 @@ Kiekvienas klausimas vertinamas pagal šiuos kriterijus:
 - **Patikimumas**
 - **Korektiškumas**
 - **Kognityvinis lygis**
-- **Diskriminacija (tik MCQ)**
+- **Diskriminacija**
 
 Daugiau apie kriterijus galima sužinoti [čia](https://rdegiovanni.github.io/publications/files/SAC2026_validators.pdf)
 
@@ -123,10 +123,9 @@ DI grąžina tokio formato JSON:
           "intended_level": "<string>"
         },
         "discrimination": {
-          "score": <0 | 1 | null>,
+          "score": <0 | 1>,
           "feedback": "<trumpas paaiškinimas>",
-          "suggestion": "<patobulinimo pasiūlymas>",
-          "applicable": <true | false>
+          "suggestion": "<patobulinimo pasiūlymas>"
         }
       }
     }
@@ -258,10 +257,9 @@ Example:
           "intended_level": "<string>"
         },
         "discrimination": {
-          "score": <0 | 1 | null>,
+          "score": <0 | 1>,
           "feedback": "<short explanation>",
-          "suggestion": "<improvement suggestion>",
-          "applicable": <true | false>
+          "suggestion": "<improvement suggestion>"
         }
       }
     }
