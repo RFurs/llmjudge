@@ -124,18 +124,17 @@ if (!$evaluations) {
 
                 if ($score === 1) {
                     $badgeclass = 'badge-success';
+                    $bgstyle = 'background-color: #4d885e';
                     $icon = '<i class="fa fa-check-circle" aria-hidden="true"></i>';
                 } else if ($score === 0) {
                     $badgeclass = 'badge-danger';
+                    $bgstyle = 'background-color: #af4040';
                     $icon = '<i class="fa fa-times-circle" aria-hidden="true"></i>';
-                } else {
-                    $badgeclass = 'badge-secondary';
-                    $icon = '<i class="fa fa-question-circle" aria-hidden="true"></i>';
                 }
 
                 $criteriastring .= html_writer::tag('span', "{$icon} {$label}: {$score}", [
                     'class' => "badge {$badgeclass} p-2 mb-1 mr-1 shadow-sm",
-                    'style' => 'font-size: 0.85rem;',
+                    'style' => 'font-size: 0.85rem; ' . $bgstyle,
                 ]);
 
                 $feedback = s($c['feedback'] ?? '');
