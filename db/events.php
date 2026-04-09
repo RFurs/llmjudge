@@ -29,8 +29,4 @@ $observers = [
         'eventname' => '\core\event\question_deleted',
         'callback' => '\qbank_llmjudge\event\question_deleted_observer::delete_question_evaluation',
     ],
-    [
-        'eventname' => '\core\event\question_moved',
-        'callback' => '\qbank_llmjudge\event\question_moved_observer::move_question_evaluation',
-    ],
 ];
