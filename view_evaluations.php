@@ -33,6 +33,35 @@ require_login($course);
 $context = context_course::instance($courseid);
 require_capability('qbank/llmjudge:evaluate', $context);
 
+$question = $DB->get_record('question', ['id' => $questionid], '*', MUST_EXIST);
+
+$answershtml = '';
+if ($question->qtype !== 'essay') {
+    $answers = $DB->get_records('question_answers', ['question' => $questionid], 'id ASC');
+    if ($answers) {
+        $answershtml .= html_writer::tag('hr', '');
+        $answershtml .= html_writer::tag('strong', get_string('answers', 'question') . ':');
+        $answershtml .= html_writer::start_tag('ul', ['class' => 'list-unstyled mt-2']);
+
+        foreach ($answers as $ans) {
+            $iscorrect = ($ans->fraction > 0);
+            $badgestyle = $iscorrect ? 'badge-success' : 'badge-light border';
+            $icon = $iscorrect ? '<i class="fa fa-check text-success"></i> ' : '';
+
+            $anstext = format_text($ans->answer, $ans->answerformat, ['context' => $context]);
+            $answershtml .= html_writer::tag(
+                'li',
+                html_writer::div(
+                    $icon . $anstext,
+                    'p-2 mb-1 rounded ' . ($iscorrect ? 'bg-light border-left border-success' : 'bg-white border-left'),
+                    ['style' => 'border-width: 4px !important;']
+                )
+            );
+        }
+        $answershtml .= html_writer::end_tag('ul');
+    }
+}
+
 $PAGE->set_url(new moodle_url('/question/bank/llmjudge/view_evaluations.php', [
     'questionid' => $questionid,
     'courseid' => $courseid,
@@ -48,8 +77,21 @@ $evaluations = $DB->get_records('qbank_llmjudge_eval', ['questionid' => $questio
 if (!$evaluations) {
     echo $OUTPUT->notification(get_string('noevaluationsfound', 'qbank_llmjudge'), 'info');
 } else {
+    $formattedquestion = format_text($question->questiontext, $question->questiontextformat, ['context' => $context]);
+
+    echo html_writer::start_div('row');
+
+    echo html_writer::start_div('col-lg-4 col-md-12 mb-4');
+        echo html_writer::start_div('card sticky-top', ['style' => 'top: 80px; z-index: 10;']);
+            echo html_writer::div('<strong>' . get_string('question') . ': ' . s($question->name) . '</strong>', 'card-header bg-light');
+            echo html_writer::div($formattedquestion . $answershtml, 'card-body small overflow-auto', ['style' => 'max-height: 80vh;']);
+        echo html_writer::end_div();
+    echo html_writer::end_div();
+
+    echo html_writer::start_div('col-lg-8 col-md-12');
+
     $table = new html_table();
-    $table->attributes['class'] = 'generaltable table-align-top';
+    $table->attributes['class'] = 'generaltable table-align-top mt-0';
     $table->head = [
         'ID',
         get_string('model', 'qbank_llmjudge'),
