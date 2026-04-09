@@ -49,12 +49,13 @@ if ($question->qtype !== 'essay') {
             $icon = $iscorrect ? '<i class="fa fa-check text-success"></i> ' : '';
 
             $anstext = format_text($ans->answer, $ans->answerformat, ['context' => $context]);
+            $bgstyle = $iscorrect ? 'background-color:#e9f7ef;' : '';
             $answershtml .= html_writer::tag(
                 'li',
                 html_writer::div(
                     $icon . $anstext,
-                    'p-2 mb-1 rounded ' . ($iscorrect ? 'bg-light border-left border-success' : 'bg-white border-left'),
-                    ['style' => 'border-width: 4px !important;']
+                    ' p-2 mb-1 rounded ' . ($iscorrect ? 'border-left border-success' : 'bg-white border-left'),
+                    ['style' => 'border-width: 4px !important; ' . $bgstyle]
                 )
             );
         }
@@ -127,6 +128,9 @@ if (!$evaluations) {
                 } else if ($score === 0) {
                     $badgeclass = 'badge-danger';
                     $icon = '<i class="fa fa-times-circle" aria-hidden="true"></i>';
+                } else {
+                    $badgeclass = 'badge-secondary';
+                    $icon = '<i class="fa fa-question-circle" aria-hidden="true"></i>';
                 }
 
                 $criteriastring .= html_writer::tag('span', "{$icon} {$label}: {$score}", [
