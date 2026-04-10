@@ -153,7 +153,7 @@ Puslapyje pateikiama:
 
 ## Plėtinio instaliavimas
 
-Nukopijuokite plėtinį į: server/moodle/question/bank/
+Nukopijuokite plėtinį į: server/moodle/question/bank/llmjudge
 
 Atnaujinus Moodle puslapį, automatiškai bus paleistas diegimas.
 
@@ -287,7 +287,7 @@ Detailed view includes:
 
 ## Plugin installation
 
-Copy and paste the plugin to server/moodle/question/bank/
+Copy and paste the plugin to server/moodle/question/bank/llmjudge
 
 Then open Moodle to trigger installation.
 
