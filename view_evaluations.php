@@ -34,6 +34,19 @@ $context = context_course::instance($courseid);
 require_capability('qbank/llmjudge:evaluate', $context);
 
 $question = $DB->get_record('question', ['id' => $questionid], '*', MUST_EXIST);
+$evaluations = $DB->get_records('qbank_llmjudge_eval', ['questionid' => $questionid], 'timecreated DESC');
+
+$PAGE->set_url(new moodle_url('/question/bank/llmjudge/view_evaluations.php', [
+    'questionid' => $questionid,
+    'courseid' => $courseid,
+    'returnurl' => $returnurl,
+]));
+$PAGE->set_title(get_string('evaluations', 'qbank_llmjudge'));
+$PAGE->set_heading(get_string('evaluations', 'qbank_llmjudge'));
+
+echo $OUTPUT->header();
+
+$formattedquestion = format_text($question->questiontext, $question->questiontextformat, ['context' => $context]);
 
 $answershtml = '';
 if ($question->qtype !== 'essay') {
@@ -63,133 +76,129 @@ if ($question->qtype !== 'essay') {
     }
 }
 
-$PAGE->set_url(new moodle_url('/question/bank/llmjudge/view_evaluations.php', [
-    'questionid' => $questionid,
-    'courseid' => $courseid,
-    'returnurl' => $returnurl,
-]));
-$PAGE->set_title(get_string('evaluations', 'qbank_llmjudge'));
-$PAGE->set_heading(get_string('evaluations', 'qbank_llmjudge'));
+$getcriterionlabel = function (string $criterionname): string {
+    $manager = get_string_manager();
+    if ($manager->string_exists($criterionname, 'qbank_llmjudge')) {
+        return get_string($criterionname, 'qbank_llmjudge');
+    }
+    return $criterionname;
+};
 
-echo $OUTPUT->header();
+echo html_writer::start_div('row');
 
-$evaluations = $DB->get_records('qbank_llmjudge_eval', ['questionid' => $questionid], 'timecreated DESC');
+echo html_writer::start_div('col-lg-4 col-md-12 mb-4');
+echo html_writer::start_div('card sticky-top', ['style' => 'top: 80px; z-index: 10;']);
+echo html_writer::div('<strong>' . get_string('question') . ': ' . s($question->name) . '</strong>', 'card-header bg-light');
+echo html_writer::div($formattedquestion . $answershtml, 'card-body small overflow-auto', ['style' => 'max-height: 80vh;']);
+echo html_writer::end_div();
+echo html_writer::end_div();
+
+echo html_writer::start_div('col-lg-8');
 
 if (!$evaluations) {
     echo $OUTPUT->notification(get_string('noevaluationsfound', 'qbank_llmjudge'), 'info');
 } else {
-    $formattedquestion = format_text($question->questiontext, $question->questiontextformat, ['context' => $context]);
-
-    echo html_writer::start_div('row');
-
-    echo html_writer::start_div('col-lg-4 col-md-12 mb-4');
-        echo html_writer::start_div('card sticky-top', ['style' => 'top: 80px; z-index: 10;']);
-            echo html_writer::div('<strong>' . get_string('question') . ': ' . s($question->name) . '</strong>', 'card-header bg-light');
-            echo html_writer::div($formattedquestion . $answershtml, 'card-body small overflow-auto', ['style' => 'max-height: 80vh;']);
-        echo html_writer::end_div();
-    echo html_writer::end_div();
-
-    echo html_writer::start_div('col-lg-8 col-md-12');
-
-    $table = new html_table();
-    $table->attributes['class'] = 'generaltable table-align-top mt-0';
-    $table->head = [
-        'ID',
-        get_string('model', 'qbank_llmjudge'),
-        get_string('time'),
-        get_string('overallscore', 'qbank_llmjudge'),
-        get_string('score', 'qbank_llmjudge'),
-        get_string('details', 'qbank_llmjudge'),
-    ];
+    echo html_writer::start_div('list-group shadow-sm');
 
     foreach ($evaluations as $eval) {
         $data = json_decode($eval->rawjson, true);
+
         $currenteval = null;
-        if (isset($data['evaluations'])) {
-            foreach ($data['evaluations'] as $e) {
-                if ($e['question_id'] == $questionid) {
-                    $currenteval = $e;
-                    break;
-                }
+        foreach ($data['evaluations'] ?? [] as $e) {
+            if ($e['question_id'] == $questionid) {
+                $currenteval = $e;
+                break;
             }
         }
 
-        $criteriastring = '';
-        $feedbackcontent = '';
+        $id = 'tabs-' . $eval->id;
 
-        if ($currenteval && isset($currenteval['criteria'])) {
-            foreach ($currenteval['criteria'] as $criterionname => $c) {
-                $score = $c['score'] ?? null;
-                $label = get_string($criterionname, 'qbank_llmjudge');
-
-                if ($score === 1) {
-                    $badgeclass = 'badge-success';
-                    $bgstyle = 'background-color: #4d885e';
-                    $icon = '<i class="fa fa-check-circle" aria-hidden="true"></i>';
-                } else if ($score === 0) {
-                    $badgeclass = 'badge-danger';
-                    $bgstyle = 'background-color: #af4040';
-                    $icon = '<i class="fa fa-times-circle" aria-hidden="true"></i>';
-                }
-
-                $criteriastring .= html_writer::tag('span', "{$icon} {$label}: {$score}", [
-                    'class' => "badge {$badgeclass} p-2 mb-1 mr-1 shadow-sm",
-                    'style' => 'font-size: 0.85rem; ' . $bgstyle,
-                ]);
-
-                $feedback = s($c['feedback'] ?? '');
-                $suggestion = s($c['suggestion'] ?? '');
-
-                $feedbackcontent .= html_writer::start_div('card mb-2 border-light shadow-sm');
-                $feedbackcontent .= html_writer::div(
-                    "<strong>{$label}</strong>",
-                    "card-header py-1 px-2 bg-light small font-weight-bold",
-                );
-                $feedbackcontent .= html_writer::start_div('card-body py-2 px-2 small');
-                $feedbackcontent .= "<div><span class='text-muted'>Feedback:</span> {$feedback}</div>";
-                if ($suggestion) {
-                    $feedbackcontent .= "<div class='mt-1 text-success'><i class='fa fa-lightbulb-o'></i> <strong>Suggestion:</strong> {$suggestion}</div>";
-                }
-                $feedbackcontent .= html_writer::end_div();
-                $feedbackcontent .= html_writer::end_div();
-            }
+        $overallscore = $eval->overallscore;
+        if ($overallscore == 1) {
+            $overallbadgeclass = 'badge-success';
+            $overallbgstyle = 'background-color:#4d885e;color:#fff;';
+        } else if ($overallscore >= 0.5) {
+            $overallbadgeclass = 'badge-warning';
+            $overallbgstyle = 'background-color:#b7791f;color:#fff;';
+        } else {
+            $overallbadgeclass = 'badge-danger';
+            $overallbgstyle = 'background-color:#af4040;color:#fff;';
         }
 
-        $feedbackbutton = \html_writer::tag(
-            'button',
-            '<i class="fa fa-search-plus"></i> ' . get_string('viewdetails', 'qbank_llmjudge'),
-            [
-                'class' => 'btn btn-outline-primary btn-sm btn-block mb-1',
-                'data-toggle' => 'collapse',
-                'data-target' => '#feedback-' . $eval->id,
-                'data-bs-toggle' => 'collapse',
-                'data-bs-target' => '#feedback-' . $eval->id,
-            ]
-        );
+        echo html_writer::start_div('list-group-item');
 
-        $feedbackdiv = \html_writer::div(
-            $feedbackcontent,
-            'collapse mt-2',
-            ['id' => 'feedback-' . $eval->id]
-        );
+        echo "<div class='d-flex justify-content-between align-items-start flex-wrap gap-2'>";
+        echo "<div class='me-3'>";
+        echo "<div><code>" . s($eval->model) . "</code></div>";
+        echo "<small class='text-muted'>" . userdate($eval->timecreated, get_string('strftimedatetime', 'langconfig')) . "</small>";
+        echo "</div>";
 
-        $table->data[] = [
-            $eval->id,
-            "<code>" . s($eval->model) . "</code>",
-            userdate($eval->timecreated, '%Y-%m-%d %H:%M'),
-            $eval->overallscore,
-            $criteriastring,
-            $feedbackbutton . $feedbackdiv,
-        ];
+        echo "<div class='text-end'>";
+        echo html_writer::tag('span', get_string('overallscore', 'qbank_llmjudge') . ': ' . s((string)$overallscore), [
+            'class' => "badge {$overallbadgeclass} p-2 shadow-sm",
+            'style' => 'font-size:0.9rem; ' . $overallbgstyle . ' color:#fff;',
+        ]);
+        echo "</div>";
+        echo "</div>";
+
+        echo "<ul class='nav nav-tabs mt-3' id='" . s($id) . "-nav' role='tablist'>";
+
+        $first = true;
+        foreach ($currenteval['criteria'] ?? [] as $criterionname => $c) {
+            $active = $first ? 'active' : '';
+            $label = $getcriterionlabel($criterionname);
+            $score = $c['score'] ?? '';
+
+            echo "<li class='nav-item' role='presentation'>";
+            echo "<a class='nav-link {$active}' data-bs-toggle='tab' href='#"
+                . s($id . '-' . $criterionname)
+                . "' role='tab' aria-controls='"
+                . s($id . '-' . $criterionname)
+                . "' aria-selected='"
+                . ($first ? 'true' : 'false') . "'>";
+            echo s($label) . " <span class='badge bg-info ms-1'>" . s((string)$score) . "</span>";
+            echo "</a>";
+            echo "</li>";
+
+            $first = false;
+        }
+
+        echo "</ul>";
+
+        echo "<div class='tab-content border border-top-0 p-3 bg-white'>";
+
+        $first = true;
+        foreach ($currenteval['criteria'] ?? [] as $criterionname => $c) {
+            $active = $first ? 'show active' : '';
+            $feedback = s($c['feedback'] ?? '');
+            $suggestion = s($c['suggestion'] ?? '');
+
+            echo "<div class='tab-pane fade {$active}' id='" . s($id . '-' . $criterionname) . "' role='tabpanel'>";
+
+            echo "<div class='mt-2'><strong>" . get_string('feedback', 'qbank_llmjudge') . ":</strong><br>{$feedback}</div>";
+            if ($suggestion !== '') {
+                echo "<div class='mt-2 text-success'><strong>" . get_string('suggestions', 'qbank_llmjudge') . ":</strong><br>{$suggestion}</div>";
+            }
+
+            echo "</div>";
+
+            $first = false;
+        }
+
+        echo "</div>";
+
+        echo html_writer::end_div();
     }
 
-    echo html_writer::table($table);
+    echo html_writer::end_div();
 }
+
+echo html_writer::end_div();
 
 if (!empty($returnurl)) {
     echo $OUTPUT->continue_button(new moodle_url($returnurl));
 } else {
-    $fallback = new moodle_url('/question/edit.php', ['courseid' => $courseid]);
-    echo $OUTPUT->continue_button($fallback);
+    echo $OUTPUT->continue_button(new moodle_url('/question/edit.php', ['courseid' => $courseid]));
 }
+
 echo $OUTPUT->footer();
