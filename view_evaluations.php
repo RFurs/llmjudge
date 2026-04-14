@@ -156,7 +156,7 @@ if (!$evaluations) {
                 . s($id . '-' . $criterionname)
                 . "' aria-selected='"
                 . ($first ? 'true' : 'false') . "'>";
-            echo s($label) . " <span class='badge bg-info ms-1'>" . s((string)$score) . "</span>";
+            echo s($label) . " <span class='badge bg-info ms-1'" . "style='color:#fff;'>" . s((string)$score) . "</span>";
             echo "</a>";
             echo "</li>";
 
