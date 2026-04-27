@@ -68,7 +68,7 @@ class questions_encoder {
                 'question_id' => (int)$q->id,
                 'type' => $q->qtype,
                 'name' => $q->name,
-                'question_text' => html_to_text(format_text($q->questiontext, $q->questiontextformat, ['context' => $context->id])),
+                'question_text' => strip_tags(format_text($q->questiontext, $q->questiontextformat, ['context' => $context->id])),
                 'options' => $answers,
             ];
         }
