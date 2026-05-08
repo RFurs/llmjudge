@@ -8,6 +8,7 @@ SVARBIOS TAISYKLĖS:
 - Naudok TIKSLIAI nurodytus JSON laukų pavadinimus.
 - Naudok TIK šiuos įvertinimus: 0, 1
 - NEPRALEISK nė vieno JSON lauko.
+- Jei kriterijus netaikomas, nustatyk "score" į null.
 
 VERTINIMO SKALĖ:
 0 = neatitinka kriterijaus
@@ -25,7 +26,8 @@ Klausimas yra glaustas, vengia pasikartojimų ir perteklinės informacijos.
 
 Patikimumas (Reliability):
 Klausimas turi vieną aiškiai teisingą atsakymą (ar atsakymų kombinaciją) ir užtikrina nuoseklius vertinimo rezultatus.
-Įrašyk 0 jeigu teisingi atsakymai gali skirstis arba neįmanoma atsakyti vienareikšmiškai. Negalima rašyti 0 vien tik dėl to, kad klausimas yra atvirojo tipo. Taip pat negalima rašyti 0 jeigu pateiktas neteisingas atsakymas, vietoje to reikia rašyti 0 vertinant korektiškumą.
+Įrašyk 0 jeigu egzistuoja klausimo defektas, kuris lemia nenuoseklius vertinimo rezultatus arba ne visi teisingi atsakymo variantai yra numatyti.
+Patikimumo kriterijus netaikomas daugybinio pasirinkimo tipo klausimams.
 
 Korektiškumas (Correctness):
 Užduoties formuluotėje nėra klaidų, trūkstamų ar prieštaringų duomenų. Sprendimas atitinka visus reikalavimus ir neturi klaidų.
@@ -38,6 +40,20 @@ Klausimas atitinka numatytą Blumo taksonomijos lygį.
 Diskriminacija (Discrimination):
 Įtikinami neteisingi atsakymai arba gerai parengta užduotis (pvz., painus ar komplikuotas kodas) leidžia atskirti pasirengusius studentus nuo nepasirengusių.
 Įrašyk 0 jeigu klausime nėra efektyvių distraktorių, kurie apsunkintų testą ir atskirtų pasirengusius studentus nuo nepasirengusių. Negalima rašyti 0 vien tik dėl to, kad klausimai yra atvirojo tipo.
+
+---
+KRITERIJŲ NEPRIKLAUSOMUMO TAISYKLĖ
+---
+
+Kiekvienas kriterijus (aiškumas, korektiškumas, patikimumas ir kt.) turi būti vertinamas nepriklausomai nuo kitų.
+Draudžiama perkelti vieno kriterijaus trūkumus į kitų kriterijų vertinimą (pvz., dviprasmiškumas neturi automatiškai mažinti korektiškumo ar patikimumo įvertinimo).
+Vertinant konkretų kriterijų, reikia atsižvelgti tik į tas klausimo savybes, kurios tiesiogiai susijusios su tuo kriterijumi.
+
+PAVYZDYS:
+Jei klausimas yra dviprasmiškas -
+Aiškumas = 0
+Patikimumas = 1 (jei nėra kito defekto, dėl kurio vertinimas tampa nenuoseklus)
+Korektiškumas = 1 (jei nėra kito defekto, pvz., prieštaringų ar trūkstamų sprendimui duomenų)
 
 ---
 ĮVESTIS (INPUT):
@@ -63,7 +79,7 @@ IŠVESTIES FORMATAS (OUTPUT FORMAT):
           "suggestion": "<patobulinimo pasiūlymas>"
         },
         "reliability": {
-          "score": <0 | 1>,
+          "score": <0 | 1 | null>,
           "feedback": "<trumpas paaiškinimas>",
           "suggestion": "<patobulinimo pasiūlymas>"
         },
@@ -93,6 +109,7 @@ IŠVESTIES FORMATAS (OUTPUT FORMAT):
 SPECIALIOS TAISYKLĖS:
 - Atsiliepimai turi būti glausti (1–3 sakiniai).
 - Pasiūlymai turi būti konkretūs ir pritaikomi.
+- Jei question_type YRA multichoice, įrašyk į "reliability" { "score": null }
 
 ---
 

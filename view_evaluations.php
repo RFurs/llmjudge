@@ -147,7 +147,15 @@ if (!$evaluations) {
         foreach ($currenteval['criteria'] ?? [] as $criterionname => $c) {
             $active = $first ? 'active' : '';
             $label = $getcriterionlabel($criterionname);
-            $score = $c['score'] ?? '';
+            $score = $c['score'] ?? null;
+
+            if ($score === null) {
+                $scoredisplay = 'N/A';
+                $scorebadgeclass = 'bg-info';
+            } else {
+                $scoredisplay = (string)$score;
+                $scorebadgeclass = 'bg-info';
+            }
 
             echo "<li class='nav-item' role='presentation'>";
             echo "<a class='nav-link {$active}' data-bs-toggle='tab' href='#"
@@ -156,7 +164,7 @@ if (!$evaluations) {
                 . s($id . '-' . $criterionname)
                 . "' aria-selected='"
                 . ($first ? 'true' : 'false') . "'>";
-            echo s($label) . " <span class='badge bg-info ms-1'" . "style='color:#fff;'>" . s((string)$score) . "</span>";
+            echo s($label) . " <span class='badge {$scorebadgeclass} ms-1' style='color:#fff;'>" . s($scoredisplay) . "</span>";
             echo "</a>";
             echo "</li>";
 

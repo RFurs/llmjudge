@@ -8,6 +8,7 @@ IMPORTANT RULES:
 - Use EXACT field names as specified.
 - Use ONLY the following scores: 0, 1
 - Do NOT omit any fields.
+- If a criterion does not apply, set "score" to null
 
 SCORING SCALE:
 0 = does not satisfy the criterion
@@ -24,8 +25,9 @@ The question is succinct, avoiding repetition and verbosity.
 Write 0 if verbosity of the question makes it hard for a student to understand the task
 
 Reliability:
-The question has a single clearly correct answer (or answers combination) and would yield consistent results.
-Write 0 if the question would yield inconsistent results. Note that you should not write 0 just because the questions are open. Also do not write 0 because of incorrect answer, instead write 0 while evaluating correctness. 
+The question has one clearly correct answer (or a valid combination of answers) and ensures consistent evaluation results.
+Assign 0 if there exists a defect in the question that leads to inconsistent evaluation outcomes or not all the correct options are provided.
+Reliability criterion is not applied for MCQ
 
 Correctness:
 The problem statement does not contain errors, missing or inconsistend data. The solution fulfills all the requirements and contains no errors or omissions.
@@ -38,6 +40,20 @@ Write 0 if the question does not match the intended taxonomy level
 Discrimination:
 Plausible incorrect answers or well prepared task (e.g., intricate or complex code) are efficient at drawing incorrect answers from unprepared students.
 Write 0 if the question has no effective distractors that are good at drawing incorrect answers from unprepared students. Note that you should not write 0 just because the questions are open.
+
+---
+CRITERIA INDEPENDENCE RULE
+---
+Each criterion (clarity, correctness, reliability, etc.) must be evaluated independently of the others.
+It is not allowed to transfer deficiencies from one criterion to another (e.g., ambiguity must not automatically reduce the correctness or reliability score).
+When evaluating a specific criterion, only those aspects of the question that are directly related to that criterion should be considered.
+
+EXAMPLE:
+If a question is ambiguous:
+
+Clarity = 0
+Reliability = 1 (if there is no other defect causing inconsistent evaluation)
+Correctness = 1 (if there is no other defect, such as contradictory or missing data required for solving the problem)
 
 ---
 INPUT:
@@ -63,7 +79,7 @@ OUTPUT FORMAT:
           "suggestion": "<improvement suggestion>"
         },
         "reliability": {
-          "score": <0 | 1>,
+          "score": <0 | 1 | null>,
           "feedback": "<short explanation>",
           "suggestion": "<improvement suggestion>"
         },
@@ -93,7 +109,7 @@ OUTPUT FORMAT:
 SPECIAL RULES:
 - Keep feedback concise (1–3 sentences).
 - Keep suggestions actionable and specific.
-
+- If question_type IS multichoice, set reliability score to null
 ---
 
 Now evaluate the provided question(s).
