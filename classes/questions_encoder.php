@@ -64,11 +64,17 @@ class questions_encoder {
                     ];
                 }
             }
+            $text = format_text($q->questiontext, $q->questiontextformat, ['context' => $context->id]);
+
+            $text = strip_tags($text, '<br><p>');
+            $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5);
+            $text = str_replace(['<br>', '<br/>', '<br />'], "\n", $text);
+
             $selectedquestionsdata[] = [
                 'question_id' => (int)$q->id,
                 'type' => $q->qtype,
                 'name' => $q->name,
-                'question_text' => strip_tags(format_text($q->questiontext, $q->questiontextformat, ['context' => $context->id])),
+                'question_text' => $text,
                 'options' => $answers,
             ];
         }
