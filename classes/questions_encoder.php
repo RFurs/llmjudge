@@ -57,10 +57,10 @@ class questions_encoder {
             if (isset($q->options->answers)) {
                 foreach ($q->options->answers as $answer) {
                     $answers[] = [
-                        'text' => html_to_text($answer->answer),
+                        'text' => html_entity_decode($answer->answer, ENT_QUOTES | ENT_HTML5),
                         'is_correct' => ($answer->fraction > 0),
                         'weight' => (float)$answer->fraction,
-                        'feedback' => html_to_text($answer->feedback),
+                        'feedback' => html_entity_decode($answer->feedback, ENT_QUOTES | ENT_HTML5),
                     ];
                 }
             }
